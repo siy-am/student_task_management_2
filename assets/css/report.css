@@ -1,0 +1,164 @@
+/* assets/css/report.css */
+
+/* ===== REPORT CARDS ===== */
+.report-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.report-card {
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.05);
+}
+
+.report-card h3 {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.report-card h3 i {
+    color: #725AB7;
+}
+
+/* Stats Summary */
+.stats-summary {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.summary-item {
+    background: #f8f9ff;
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+}
+
+.summary-value {
+    font-size: 32px;
+    font-weight: 700;
+    color: #725AB7;
+    margin-bottom: 5px;
+}
+
+.summary-label {
+    font-size: 14px;
+    color: #666;
+}
+
+/* Progress Circle */
+.progress-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.circular-progress {
+    position: relative;
+    height: 180px;
+    width: 180px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* background color set dynamically in PHP */
+    margin-bottom: 20px;
+}
+
+.circular-progress::before {
+    content: "";
+    position: absolute;
+    height: 140px;
+    width: 140px;
+    border-radius: 50%;
+    background-color: white;
+}
+
+.progress-value {
+    position: relative;
+    font-size: 40px;
+    font-weight: 700;
+    color: #725AB7;
+}
+
+.completion-text {
+    color: #666;
+    font-size: 16px;
+}
+
+/* Category Bars */
+.category-bar {
+    margin-bottom: 20px;
+}
+
+.bar-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #555;
+}
+
+.bar-bg {
+    height: 12px;
+    background: #f0f0f0;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.bar-fill {
+    height: 100%;
+    border-radius: 6px;
+    background: linear-gradient(90deg, #725AB7, #6875DC);
+    transition: width 0.5s ease;
+}
+
+/* Table */
+.tasks-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.tasks-table th,
+.tasks-table td {
+    text-align: left;
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.tasks-table th {
+    color: #999;
+    font-weight: 600;
+    font-size: 13px;
+    text-transform: uppercase;
+}
+
+.tasks-table td {
+    color: #333;
+    font-size: 14px;
+}
+
+.status-badge {
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: 600;
+    background: #d4edda;
+    color: #155724;
+}
+
+@media (max-width: 900px) {
+    .report-grid {
+        grid-template-columns: 1fr;
+    }
+}

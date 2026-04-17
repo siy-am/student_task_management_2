@@ -1,0 +1,126 @@
+-- ############################################################################
+-- TASKFLOW PROJECT QUERIES
+-- This file contains the primary SQL queries used throughout the student_task_management project.
+-- ############################################################################
+
+-- ============================================================================
+-- 1. DATABASE SCHEMA (ESTIMATED)
+-- ============================================================================
+
+-- Table structure for users
+-- CREATE TABLE users (
+--     id INT AUTO_INCREMENT PRIMARY KEY,
+--     first_name VARCHAR(50) NOT NULL,
+--     last_name VARCHAR(50) NOT NULL,
+--     username VARCHAR(50) NOT NULL UNIQUE,
+--     email VARCHAR(100) NOT NULL UNIQUE,
+--     password VARCHAR(255) NOT NULL,
+--     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+-- );
+
+-- Table structure for tasks
+-- CREATE TABLE tasks (
+--     id INT AUTO_INCREMENT PRIMARY KEY,
+--     user_id INT NOT NULL,
+--     title VARCHAR(255) NOT NULL,
+--     description TEXT,
+--     category ENUM('General', 'School', 'Work', 'Personal', 'Other') DEFAULT 'General',
+--     priority ENUM('Low', 'Medium', 'High') DEFAULT 'Medium',
+--     status ENUM('Pending', 'In Progress', 'Completed') DEFAULT 'Pending',
+--     due_date DATE,
+--     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+-- );
+
+
+-- ============================================================================
+-- 2. USER AUTHENTICATION & PROFILE
+-- ============================================================================
+
+-- Check if user exists (Login)
+SELECT id, username, password, first_name FROM users WHERE username = ? OR email = ?;
+
+-- Check for duplicate username/email (Registration)
+SELECT id FROM users WHERE username = '$username' OR email = '$email';
+
+-- Create new user (Registration)
+INSERT INTO users (first_name, last_name, username, email, password) 
+VALUES ('$first_name', '$last_name', '$username', '$email', '$hashed_password');
+
+-- Fetch user profile data
+SELECT first_name, username, email FROM users WHERE id = ?;
+
+-- Update profile information
+UPDATE users SET first_name = ?, username = ?, email = ? WHERE id = ?;
+
+-- Verify current password before change
+SELECT password FROM users WHERE id = ?;
+
+-- Update user password
+UPDATE users SET password = ? WHERE id = ?;
+
+
+-- ============================================================================
+-- 3. TASK MANAGEMENT (CRUD)
+-- ============================================================================
+
+-- Create a new task
+INSERT INTO tasks (user_id, title, description, category, priority, status, due_date) 
+VALUES (?, ?, ?, ?, ?, ?, ?);
+
+-- Fetch all tasks for a specific user (Dashboard/List)
+SELECT * FROM tasks WHERE user_id = ? ORDER BY created_at DESC;
+
+-- Fetch tasks with dynamic sorting
+-- Sorting options: due_date ASC, due_date DESC, FIELD(priority, 'High', 'Medium', 'Low'), created_at DESC
+SELECT * FROM tasks WHERE user_id = ? ORDER BY [DYNAMIC_ORDER_BY];
+
+-- Update specific task details
+UPDATE tasks SET title=?, description=?, category=?, priority=?, status=?, due_date=? 
+WHERE id=? AND user_id=?;
+
+-- Update task status only (Drag & Drop or Button click)
+UPDATE tasks SET status = ? WHERE id = ? AND user_id = ?;
+
+-- Delete a task
+DELETE FROM tasks WHERE id = ? AND user_id = ?;
+
+-- Check task ownership (Security check)
+SELECT id FROM tasks WHERE id = ? AND user_id = ?;
+
+
+-- ============================================================================
+-- 4. DASHBOARD, ANALYTICS & NOTIFICATIONS
+-- ============================================================================
+
+-- Fetch urgent tasks (Overdue, Due Today, Due Tomorrow)
+SELECT id, title, due_date FROM tasks 
+WHERE user_id = ? 
+AND status != 'Completed' 
+AND due_date IS NOT NULL 
+AND due_date <= ? 
+ORDER BY due_date ASC;
+
+-- Aggregate task statistics for reports
+SELECT status, category, due_date FROM tasks WHERE user_id = ?;
+
+-- Fetch recently completed tasks for report summary
+SELECT title, category, due_date FROM tasks 
+WHERE user_id = ? AND status = 'Completed' 
+ORDER BY due_date DESC LIMIT 5;
+
+
+-- ============================================================================
+-- 5. CALENDAR & CATEGORY FILTERING
+-- ============================================================================
+
+-- Fetch tasks for a specific month range
+SELECT id, title, priority, status, due_date FROM tasks 
+WHERE user_id = ? 
+AND due_date BETWEEN ? AND ? 
+ORDER BY due_date ASC;
+
+-- Fetch tasks by category (e.g., General/Other)
+SELECT * FROM tasks 
+WHERE user_id = ? AND category IN ('General', 'Other') 
+ORDER BY created_at DESC;
