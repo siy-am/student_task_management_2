@@ -3,6 +3,9 @@
 TaskFlow is a robust, responsive web-based application developed by BrightHub groups designed to help students and professionals manage their daily tasks efficiently. With a modern, user-friendly interface, it allows users to organize tasks by categories, track deadlines via a calendar, and visualize their productivity through reports.
 
 ---
+## 📸 Screenshot
+
+![TaskFlow Screenshot](./Screenshot%20(32).png)
 
 ## ✨ Features
 
